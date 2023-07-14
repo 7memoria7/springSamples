@@ -21,12 +21,6 @@
 	where id=#{id} and pwd=#{pwd}
 </select>
 
-<select id="bbslist" parameterType="ssg.com.a.dto.MemberDto" 
-					 resultType="ssg.com.a.dto.MemberDto">
-	
-	select seq, id, ref, step, depth, title, content, wdate, del, readcount
-	from bbs
-	order by ref desc, step asc
-</select>
+
 
 </mapper>

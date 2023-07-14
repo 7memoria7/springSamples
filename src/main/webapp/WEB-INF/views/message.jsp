@@ -45,7 +45,7 @@ if(bbswrite != null && !bbswrite.equals("")){
 		%>
 		<script type="text/javascript">
 		alert("성공적으로 작성되었습니다");
-		location.href = "bbs?param=bbslist";
+		location.href = "bbslist.do";
 		</script>
 		<%
 	}
@@ -53,7 +53,7 @@ if(bbswrite != null && !bbswrite.equals("")){
 		%>
 		<script type="text/javascript">
 		alert("다시 작성해 주십시오");
-		location.href = "bbs?param=bbswrite";
+		location.href = "bbswrite.do";
 		</script>
 		<%
 	}
