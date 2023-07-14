@@ -22,7 +22,7 @@
 		</if>
 	</if>
 	order by ref desc, step asc
-	limit #{pageNumber}, 10
+	limit ${(pageNumber*10)}, 10
 </select>
 
 <select id="getAllBbs"  parameterType="ssg.com.a.dto.BbsParam"
@@ -61,12 +61,18 @@
 	</if>
 </select>
 
-<insert id="bbswrite"   parameterType="ssg.com.a.dto.BbsParam" >
-					
+<insert id="bbswrite"   parameterType="ssg.com.a.dto.BbsDto" >
 	insert into bbs(id, ref, step, depth, title, content, wdate, del, readcount)
 	values(#{id}, (select ifnull(max(ref), 0)+1 from bbs b), 0, 0, 
 			#{title}, #{content}, now(), 0, 0)
 </insert>
+
+<select id="bbsdetail" parameterType="java.lang.Integer"
+						resultType="ssg.com.a.dto.BbsDto">
+	select seq, id, ref, step, depth, title, content, wdate, del, readcount
+	from bbs		
+	where seq=#{seq}				
+</select>
 
 
 

@@ -12,7 +12,7 @@ import ssg.com.a.dto.BbsParam;
 @Repository
 public class BbsDaoImpl implements BbsDao{
 	
-	@Autowired
+		@Autowired
 	SqlSessionTemplate session;
 	
 	String ns = "Bbs.";
@@ -32,6 +32,9 @@ public class BbsDaoImpl implements BbsDao{
 		return session.insert(ns + "bbswrite", dto);
 	}
 
-	
+	@Override
+	public BbsDto bbsdetail(int seq) {
+		return session.selectOne(ns + "bbsdetail", seq);
+	}
 	
 }

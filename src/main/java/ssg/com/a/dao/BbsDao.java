@@ -10,4 +10,6 @@ public interface BbsDao {
 	int getAllBbs(BbsParam param);
 	
 	int bbswrite(BbsDto dto);
+	
+	BbsDto bbsdetail(int seq);
 }

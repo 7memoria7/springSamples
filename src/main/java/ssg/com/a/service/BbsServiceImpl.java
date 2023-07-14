@@ -31,4 +31,9 @@ public class BbsServiceImpl implements BbsService{
 		return dao.bbswrite(dto)>0?true:false;
 	}
 
+	@Override
+	public BbsDto bbsdetail(int seq) {
+		return dao.bbsdetail(seq);
+	}
+
 }

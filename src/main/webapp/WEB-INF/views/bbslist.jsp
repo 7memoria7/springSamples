@@ -1,4 +1,4 @@
-
+<%@page import="ssg.com.a.dto.MemberDto"%>
 <%@page import="ssg.com.a.dto.BbsParam"%>
 <%@page import="util.BbsUtil"%>
 <%@page import="ssg.com.a.dto.BbsDto"%>
@@ -36,7 +36,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-
+<script type="text/javascript" src="JQuery/jquery.twbsPagination.min.js"></script>
 <style type="text/css">
 .center{
 	margin: auto;
@@ -59,6 +59,17 @@ tr {
 <br>
 
 <a href="calendarList.do">일정관리</a>
+
+<%
+	MemberDto login = (MemberDto)session.getAttribute("login");
+	System.out.println(login.toString());
+	if(login != null){
+		%>
+		<a href="member?param=logout">login</a>
+		<%
+		}
+%>
+
 
 <div class="center">
 
@@ -90,7 +101,7 @@ if(list == null || list.size() == 0){
 			if(bbs.getDel() == 0){
 				%>				
 				<td style="text-align: left;">
-					<a href="bbs?param=bbsdetail&seq=<%= bbs.getSeq() %>">
+					<a href="bbsdetail.do?seq=<%= bbs.getSeq() %>">
 						<%= BbsUtil.arrow(bbs.getDepth()) %>
 						<%= BbsUtil.titleDot(bbs.getTitle()) %>
 					</a>
@@ -117,8 +128,8 @@ if(list == null || list.size() == 0){
 
 </table>
 
+<%-- 
 
-<%
 	for(int i = 0;i < pageBbs; i++){	// 0 1 2 3 ~
 		if(pageNumber == i){	// 현재 페이지
 			%>
@@ -136,7 +147,16 @@ if(list == null || list.size() == 0){
 			<%
 		}		
 	}
-%>
+
+--%>
+<br>
+
+<div class="container">
+<nav aria-label="Page navigation">
+<ul class="pagination" id="pagination" style="justify-content:center"></ul>
+</nav>
+</div>
+
 
 <br><br>
 <div class="form-row align-items-center d-flex justify-content-center align-items-center container">
@@ -155,13 +175,11 @@ if(list == null || list.size() == 0){
 </div>
 
 <br>
-<a href="bbswriteAf.do">글쓰기</a>
+<a href="bbswrite.do">글쓰기</a>
 
 </div>
 
 <script type="text/javascript">
-
-$(document).ready(function){
 
 // Java -> JavaScript
 let search = "<%=search %>"; 	// 문자열 일 경우
@@ -185,17 +203,34 @@ function searchBtn() {
 		return;
 	}
 	*/
-	location.href = "bbs?param=bbslist&choice=" + choice + "&search=" + search;
+	location.href = "bbslist.do?choice=" + choice + "&search=" + search;
 }
-
+/*
 function goPage( pageNum ) {
 	let choice = $("#choice").val();
 	let search = $("#search").val();
 
-	location.href = "bbs?param=bbslist&choice=" + choice + "&search=" + search + "&pageNumber=" + pageNum;
-}
+	location.href = "bbslist.do?&choice=" + choice + "&search=" + search + "&pageNumber=" + pageNum;
+}*/
 
-}
+	$("#pagination").twbsPagination({
+		startPage:<%=pageNumber+1 %>,
+		totalPages:<%=pageBbs %>,
+		visiblePages:10,  // 글이 1000개라고 가정한다면, 한 화면에 페이지수를 10개를 보여줘라.
+		first:'<span srid-hidden="true">«</span>',  // 처음 페이지로 이동 « 
+		prev:"이전",
+		next:"다음",
+		last:'<span srid-hidden="true">»</span>', 	// 마지막 페이지로 이동 »
+		initiateStartPageClick:false,				// 첫번째 자동실행이 되지 않도록 하는 함수
+		onPageClick:function(event, page){			// 페이지 번호를 클릭했을 때, 실행되는 함수
+			//	alert(page);
+			let choice = $("#choice").val();
+			let search = $("#search").val();
+
+			location.href = "bbslist.do?&choice=" + choice + "&search=" + search + "&pageNumber=" + (page - 1);
+		}
+	});
+		
 </script>
 </body>
 </html>

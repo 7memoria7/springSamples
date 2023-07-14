@@ -28,6 +28,8 @@ public class BbsController {
 			param =  new BbsParam("","",0);
 		}
 		
+		
+		
 		List<BbsDto> list = service.bbslist(param);
 		// 글의 총수
 		int count = service.getAllBbs(param);	// 23page
@@ -44,23 +46,33 @@ public class BbsController {
 		return "bbslist";	// bbslist.jsp
 	}
 	
-	@RequestMapping(value="bbswrite.do")
+	@GetMapping("bbswrite.do")
 	public String bbswrite() {
 		System.out.println("BbsController bbswrite() " + new Date());
-		return "bbslist";
+		return "bbswrite";
 	}
 	
-	@RequestMapping(value="bbswriteAf.do")
+	@PostMapping("bbswriteAf.do")
 	public String bbswriteAf(BbsDto dto, Model model) {		// 보내줄때는 모델이 항상 필요하다
 		System.out.println("BbsController bbswriteAf() " + new Date());
 			
 		boolean isS = service.bbswrite(dto);
 				
-		String message = "BBS_ADD_OK";
+		String bbswrite = "BBS_ADD_OK";
 		if(isS == false) {
-			message = "BBS_ADD_NO";		// 코드를 줄여보자.
+			bbswrite = "BBS_ADD_NO";		// 코드를 줄여보자.
 		}
-		model.addAttribute("message", message);
+		model.addAttribute("bbswrite", bbswrite);
 		return "message";
+	}
+	
+	@GetMapping("bbsdetail.do")
+	public String bbsdetail(int seq, Model model) {
+		System.out.println("BbsController bbsdetail() " + new Date());
+		
+		BbsDto dto= service.bbsdetail(seq);
+		
+		model.addAttribute("bbsdto", dto);
+		return "bbsdetail";
 	}
 }

@@ -11,4 +11,6 @@ public interface BbsService {
 	int getAllBbs(BbsParam param);
 	
 	boolean bbswrite(BbsDto dto);
+	
+	BbsDto bbsdetail(int seq);
 }
