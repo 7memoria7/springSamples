@@ -40,7 +40,6 @@
 <th>아이디</th>
 	<td>
 		<input type="text" class="form-control" id="id" name="id" size="20"><br>
-		<input type="checkbox" id="chk_save_id">id저장 <!-- 아이디저장 -->
 	</td>
 </tr>
 
@@ -48,6 +47,7 @@
 <th>패스워드</th>
 	<td>
 		<input type="password" class="form-control" name="pwd" value="" size="20">
+		<input type="checkbox" id="chk_save_id">id저장 <!-- 아이디저장 -->
 	</td>
 </tr>
 

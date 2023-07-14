@@ -24,7 +24,6 @@ public class MemberDaoImpl implements MemberDao{
 	}
 	@Override
 	public int addmember(MemberDto dto) {
-		
 		return session.insert(ns + "addmember", dto);
 	}
 	@Override
