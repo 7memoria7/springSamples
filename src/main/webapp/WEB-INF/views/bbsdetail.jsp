@@ -4,11 +4,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<%
-	MemberDto mem = (MemberDto)session.getAttribute("login");
-	BbsDto dto = (BbsDto)request.getAttribute("bbsdto");
-%>    
-    
+	<%
+	MemberDto login = (MemberDto)session.getAttribute("login");
+	if(login == null || login.getId().equals("")){
+	%>  
+		<script>
+		alert("로그인 해 주십시오");
+		location.href = "login.do";
+		</script>
+	<%
+	}
+	%>
+
+	<%	
+		BbsDto dto = (BbsDto)request.getAttribute("bbsdto");
+	%> 
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,77 +32,160 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
 <style type="text/css">
+/*
+body {
+	background-color: #0D0D0D;
+	color: #F2F2F2;
+	        }
+	        */
+
 .center{
 	margin: auto;
 	width: 800px;		
 }
 th{
-	background: royalblue;
+	background: gray;
 	color: white;
 }
+
 </style>
 
 </head>
 <body>
 
-<h1>상세 글보기</h1>
+<p></p>
+
 
 <div class="center">
 
+<% if(login != null){ %>
 <table class="table table-bordered">
-<col width="200"><col width="500">
+<col width="200"><col width="200"><col width="200"><col width="200">
 
 <tr>
-	<th>작성자</th>
+	<th>제목</th>
+	<td colspan="3"><%=dto.getTitle() %></td>
+</tr>
+<tr>
+	<th>아이디</th>
 	<td><%=dto.getId() %></td>
-</tr>
-<tr>
-	<th>작성일</th>
-	<td><%=dto.getWdate() %></td>	
-</tr>
-<tr>
 	<th>조회수</th>
 	<td><%=dto.getReadcount() %></td>	
 </tr>
-<tr>
-	<th>제목</th>
-	<td><%=dto.getTitle() %></td>	
-</tr>
 <tr>	
-	<td colspan="2" style="height: 300px; font-size: 120%">
+	<th>등록일</th>
+	<td><%=dto.getWdate() %></td>
+	<th>수정일</th>
+	<% if(dto.getMdate() != null ){ %>
+	<td><%=dto.getMdate() %></td>	
+	<% } %>
+</tr>	
+
+<tr>	
+	<th>내용</th>
+	<td colspan="4" style="height: 300px; font-size: 120%">
 		<textarea rows="12" readonly style="background-color: #ffffff; font-size: 20px" 
-cols="15" class="form-control" ><%=dto.getContent() %></textarea>
+cols="20" class="form-control" ><%=dto.getContent() %></textarea>
 	</td>
 </tr>
 </table>
-
+<% } %>
 <br>
 
-<button type="button" onclick="answerBbs(<%=dto.getSeq() %>)">답글</button>
-
+<%-- <button type="button" onclick="answerBbs(<%=dto.getSeq() %>)">답글</button> --%>
+<button type="button" class="btn btn-dark" onclick ="detailBbs(<%=dto.getSeq() %>)">목록</button>
 <%
-if(mem.getId().equals(dto.getId())){
+if(login != null && login.getId().equals(dto.getId()) || login.getAuth()==1){
 	%>
-	<button type="button" onclick="updateBbs(<%=dto.getSeq() %>)">글수정</button>
+	<button type="button" class="btn btn-dark" onclick="updateBbs(<%=dto.getSeq() %>)">글수정</button>
 	
-	<button type="button" onclick="deleteBbs(<%=dto.getSeq() %>)">글삭제</button>
+	<button type="button" class="btn btn-dark" onclick="deleteBbs(<%=dto.getSeq() %>)">글삭제</button>
 	<%
 }
 %>
 
+
+</div>
+
+<br><br>
+
 <script type="text/javascript">
-function answerBbs( seq ) {
-	location.href = "answer,do?seq=" + seq;	
+
+function detailBbs( seq ) {
+	location.href = "bbslist.do";	
 }
 function updateBbs( seq ) {
-	location.href = "answer,do?seq=" + seq;
+	location.href = "bbsupdate.do?seq=" + seq;
 }
 function deleteBbs( seq ) {
-	location.href = "answer,do?seq=" + seq;
+	location.href = "bbsdelete.do?seq=" + seq;
 }
 </script>
 
+<br><br>
+<%-- 댓글 --%>
+<div id="app" class="container">
+
+<form action="commentWriteAf.do" method="post">
+<input type="hidden" name="seq" value="<%=dto.getSeq() %>"> <!-- 글에 대한 정보 -->
+<input type="hidden" name="id" value="<%=login.getId() %>"> <!-- 세션에 로그인한 사람 정보 -->
+
+<table>
+<col width="1000px"><col width="150px">
+<tr>
+	<td><b>Comment</b></td>
+</tr>
+<tr>
+	<td>
+		<textarea rows="3" class="form-control" name="content"></textarea>
+	</td>
+	<td style="padding-left: 30px">
+		<button type="submit" class="btn btn-dark btn-block p-4">등록</button>
+	</td>
+</tr>
+</table>
+
+</form>
+
+<table class="table table-bordered">
+<col width="400"><col width="400">
+
+<tbody id="tbody">
+
+<!-- Ajax는 비어있는 공간에 끼워넣기의 개념이다 -->
+</tbody>
+
+</table>
+
+<script type="text/javascript">
+$(document).ready(function(){	
+	$.ajax({
+		url:"commentList.do",
+		type:"get",
+		data:{ seq:<%=dto.getSeq() %> },
+		success:function( list ){
+	
+			$("#tbody").html("");			
+			$.each(list, function(i, item){
+				let str = 	"<tr class='table-info'>"	
+					+		"<td>아이디: " + item.id + "</td>"
+					+		"<td>등록일: " + item.wdate + "</td>"
+					+	"</tr>"
+					+	"<tr>"
+					+		"<td colspan='2'>" + item.content + "</td>"								
+					+	"</tr>";
+				$("#tbody").append(str);
+			}); 	 /*append사용으로  윗줄에 $("#tbody").html(""); 이 코드가 필요하다 */	
+		},
+		error:function(){
+			alert('error');
+		}
+	});
+})
+</script>
 
 </div>
 

@@ -1,23 +1,26 @@
 package ssg.com.a.dto;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 // BBS Bulletin Board System
 public class BbsDto implements Serializable{  // 직렬화
 	
-	private int seq;		// sequence 글번호
-	private String id;		// 작성자
+	private int seq;			// sequence 글번호
+	private String id;			// 작성자
 	
-	private int ref;		// 그룹번호(글번호)
-	private int step;		// 행번호
-	private int depth;		// 깊이
+	private int ref;			// 그룹번호(글번호)
+	private int step;			// 행번호
+	private int depth;			// 깊이
 	
 	private String title;
 	private String content;
-	private String wdate;
+	private String wdate;		// 등록일
+	private String mdate;		// 마지막 수정시간
 	
 	private int del;
-	private int readcount;	// 조회수
+	private int readcount;		// 조회수
+	private int commentcount;	// 댓글 갯수
 	
 	public BbsDto() {
 	}
@@ -29,8 +32,8 @@ public class BbsDto implements Serializable{  // 직렬화
 		this.content = content;
 	}
 
-	public BbsDto(int seq, String id, int ref, int step, int depth, String title, String content, String wdate, int del,
-			int readcount) {
+	public BbsDto(int seq, String id, int ref, int step, int depth, String title, String content, String wdate,
+			String mdate, int del, int readcount, int commentcount) {
 		super();
 		this.seq = seq;
 		this.id = id;
@@ -40,8 +43,10 @@ public class BbsDto implements Serializable{  // 직렬화
 		this.title = title;
 		this.content = content;
 		this.wdate = wdate;
+		this.mdate = mdate;
 		this.del = del;
 		this.readcount = readcount;
+		this.commentcount = commentcount;
 	}
 
 	public int getSeq() {
@@ -108,6 +113,14 @@ public class BbsDto implements Serializable{  // 직렬화
 		this.wdate = wdate;
 	}
 
+	public String getMdate() {
+		return mdate;
+	}
+
+	public void setMdate(String mdate) {
+		this.mdate = mdate;
+	}
+
 	public int getDel() {
 		return del;
 	}
@@ -123,4 +136,20 @@ public class BbsDto implements Serializable{  // 직렬화
 	public void setReadcount(int readcount) {
 		this.readcount = readcount;
 	}
+
+	public int getCommentcount() {
+		return commentcount;
+	}
+
+	public void setCommentcount(int commentcount) {
+		this.commentcount = commentcount;
+	}
+
+	@Override
+	public String toString() {
+		return "BbsDto [seq=" + seq + ", id=" + id + ", ref=" + ref + ", step=" + step + ", depth=" + depth + ", title="
+				+ title + ", content=" + content + ", wdate=" + wdate + ", mdate=" + mdate + ", del=" + del
+				+ ", readcount=" + readcount + ", commentcount=" + commentcount + "]";
+	}
 }
+	

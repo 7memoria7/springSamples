@@ -15,11 +15,8 @@
 	String choice = param.getChoice();
 	String search = param.getSearch();
 	
-	/* param을 만들어서 넘겨 줬기 때문에 수정이 필요하다.
-	int pageNumber = (Integer)request.getAttribute("pageNumber");
-	String choice = (String)request.getAttribute("choice");
-	String search = (String)request.getAttribute("search");
-	*/
+	MemberDto login = (MemberDto)session.getAttribute("login");
+	
 %>    
     
 <!DOCTYPE html>
@@ -38,13 +35,20 @@
 
 <script type="text/javascript" src="JQuery/jquery.twbsPagination.min.js"></script>
 <style type="text/css">
+
+/* 전체 배경색 검정 글자색 하얀색 */
+/* body {
+	background-color: #0D0D0D;
+	color: #F2F2F2;
+	        } */
 .center{
 	margin: auto;
+	
 	width: 1000px;
 	text-align: center;
 }
 th{
-	background: royalblue;
+	background-color: #0D0D0D;
 	color: white;
 } 
 tr {
@@ -54,30 +58,16 @@ tr {
 
 </head>
 <body>
-
-<h1>게시판</h1>
-<br>
-
-<a href="calendarList.do">일정관리</a>
-
-<%
-	MemberDto login = (MemberDto)session.getAttribute("login");
-	System.out.println(login.toString());
-	if(login != null){
-		%>
-		<a href="member?param=logout">login</a>
-		<%
-		}
-%>
+<br><br><br>
 
 
 <div class="center">
 
-<table class="table table-hover">
-<col width="70"><col width="600"><col width="100"><col width="150">
+<table class="table table-bordered">
+<!-- <col width="70"><col width="600"><col width="100"><col width="150"> -->
 <thead>
 <tr>
-	<th>번호</th><th>제목</th><th>조회수</th><th>작성자</th>
+	<th>번호</th>	<th>제목</th>	<th>작성자</th><th>조회수</th>
 </tr>
 </thead>
 
@@ -104,21 +94,33 @@ if(list == null || list.size() == 0){
 					<a href="bbsdetail.do?seq=<%= bbs.getSeq() %>">
 						<%= BbsUtil.arrow(bbs.getDepth()) %>
 						<%= BbsUtil.titleDot(bbs.getTitle()) %>
-					</a>
+					</a>	
+<!-- 댓글추가  -->			<%-- <span class="badge badge-pill badge-danger">댓글 <%=bbs.getCommentcount() %> </span> --%>
+
+					<a href ="bbsdetail.do?seq=<%= bbs.getSeq() %>"></a>	
 				</td>
 				<% 
 			}else{
 			%>
 				<td style="text-align: left;">
-					<%=BbsUtil.arrow(bbs.getDepth()) %>
-					<font color="#ff0000"> ****** 이 글은 작성자에 의해서 삭제되었습니다</font>
+					<%-- <%=BbsUtil.arrow(bbs.getDepth()) %> --%>
+					<font color="#D91E1E"> ****** 이 글은 작성자에 의해서 삭제되었습니다</font>
+					
+		<%--		<%
+					if(login != null && login.getAuth()==1){
+				%>
+				<font color="#D91E1E"> ****** 이 글은 관리자에 의해서 삭제되었습니다</font>
+				<%
+				}
+				%> --%>
+
 				</td>			
 			<%
 			}
 			%>
-			
-			<td><%=bbs.getReadcount() %></td>
 			<td><%=bbs.getId() %></td>
+			<td><%=bbs.getReadcount() %></td>
+			
 		</tr>
 		<% 
 	}
@@ -127,41 +129,19 @@ if(list == null || list.size() == 0){
 </tbody>
 
 </table>
-
-<%-- 
-
-	for(int i = 0;i < pageBbs; i++){	// 0 1 2 3 ~
-		if(pageNumber == i){	// 현재 페이지
-			%>
-			<span style="font-size: 15pt;color: blue;font-weight: bold;">
-				<%=i + 1 %>
-			</span>			
-			<%
-		}
-		else{	// 그밖에 페이지
-			%>
-			<a href="#none" title="<%=i+1 %>페이지" onclick="goPage(<%=i %>)"
-				style="font-size: 15pt;color: #000; font-weight: bold; text-decoration: none;">
-				[<%=i + 1 %>]
-			</a>			
-			<%
-		}		
-	}
-
---%>
 <br>
 
 <div class="container">
-<nav aria-label="Page navigation">
-<ul class="pagination" id="pagination" style="justify-content:center"></ul>
-</nav>
+	<nav aria-label="Page navigation">
+		<ul class="pagination" id="pagination" style="justify-content:center"></ul>
+	</nav>
 </div>
 
 
 <br><br>
 <div class="form-row align-items-center d-flex justify-content-center align-items-center container">
 <select id="choice" class="form-control" style="width:auto;">
-	<option value="">검색</option>
+	<option value="start">검색</option>
 	<option value="title">제목</option>
 	<option value="content">내용</option>
 	<option value="writer">작성자</option>
@@ -171,18 +151,17 @@ if(list == null || list.size() == 0){
 	<input type="text" id="search" class="form-control" value="<%=search %>">
 </div>
 
-<button type="button" onclick="searchBtn()" class="btn btn-primary">검색</button>
+<button type="button" onclick="searchBtn()" class="btn btn-dark">검색</button>
 </div>
 
 <br>
 <a href="bbswrite.do">글쓰기</a>
-
 </div>
 
 <script type="text/javascript">
-
 // Java -> JavaScript
 let search = "<%=search %>"; 	// 문자열 일 경우
+
 if(search != ""){
 	let obj = document.getElementById("choice");
 	obj.value = "<%=choice %>";

@@ -18,6 +18,7 @@
 	  	<param-name>contextConfigLocation</param-name>
 	  	<param-value>
 	  		/WEB-INF/spring/servlet-context.xml
+	  		/WEB-INF/spring/file-context.xml         <!-- 파일업로드하기 위해 이 소스코드를 추가하자! -->
 	  	</param-value>
 	  </init-param>
 	  

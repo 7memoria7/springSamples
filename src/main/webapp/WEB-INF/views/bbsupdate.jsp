@@ -1,17 +1,18 @@
-
+<%@page import="ssg.com.a.dto.BbsDto"%>
 <%@page import="ssg.com.a.dto.MemberDto"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
+    
 <%
 	MemberDto mem = (MemberDto)session.getAttribute("login");
-%>  
-    
+	BbsDto dto = (BbsDto)request.getAttribute("bbsdto");
+%> 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시판 글쓰기</title>
+<title>글 수정</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
@@ -23,59 +24,65 @@
 <style type="text/css">
 /* body {
 	background-color: #0D0D0D;
-	color: #F2F2F2; */
-	        }
+	color: #F2F2F2;
+	        } */
+	        
 .center{
 	margin: auto;
-	width: 800px;
-	text-align: center;		
+	width: 800px;		
 }
 th{
 	background: gray;
 	color: white;
-}
+}	        
 </style>
 </head>
 <body>
+<h2></h2>
 
-<h1></h1>
 <br>
 
-<div class="center">
+<div align="center">
 
-<form id="frm" method="post">
+<!-- <form action="bbsupdateAf.do" method="get"> -->
+<form id="frm" method="get">
+<input type="hidden" name="seq" value="<%=dto.getSeq() %>">
 
 <table class="table table-bordered">
 <col width="200"><col width="500">
-
 <tr>
-	<th>아이디</th>
+	<th>작성자</th>
 	<td>
-		<input type="text" name="id" class="form-control" value="<%=mem.getId() %>" readonly="readonly">
+	<input type="text" name="id" class="form-control" value="<%=dto.getId() %>" readonly="readonly">
 	</td>
 </tr>
 <tr>
 	<th>제목</th>
 	<td>
-		<input type="text" id="title" name="title" class="form-control" placeholder="제목을 기입">
+		<input type="text" size="60" id="title" class="form-control" name="title" value="<%=dto.getTitle() %>">
 	</td>
 </tr>
-
 <tr>
 	<th>내용</th>
 	<td>
-		<textarea rows="15" cols="50" class="form-control" id="content" name="content" placeholder="내용을 기입"></textarea>
+		<textarea rows="15" cols="60" id="content" class="form-control" name="content"><%=dto.getContent()%></textarea>
+	</td>
+</tr>
+	<tr>	
+		<th>작성일</th>
+		<td><%=dto.getWdate() %></td>
+	</tr>
+
+<tr>
+	<td colspan="2">
+		<button type="button" class="btn btn-dark">수정완료</button>
 	</td>
 </tr>
 
 </table>
-<br>
-
-<button type="button" class="btn btn-dark">글쓰기</button>
-
 </form>
-</div>
 
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
 	
@@ -91,11 +98,12 @@ $(document).ready(function(){
 			return;
 		}
 		
-		$("#frm").attr("action", "bbswriteAf.do").submit();		
+		$("#frm").attr("action", "bbsupdateAf.do").submit();		
 	});
 	
 });
 </script>
+
 
 
 </body>

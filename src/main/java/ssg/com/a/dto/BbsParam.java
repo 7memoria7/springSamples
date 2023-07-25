@@ -43,5 +43,10 @@ public class BbsParam implements Serializable{
 	public void setPageNumber(int pageNumber) {
 		this.pageNumber = pageNumber;
 	}
+
+	@Override
+	public String toString() {
+		return "BbsParam [choice=" + choice + ", search=" + search + ", pageNumber=" + pageNumber + "]";
+	}
 	
 }
