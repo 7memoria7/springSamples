@@ -34,23 +34,33 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
+<script src="http://lab.alexcican.com/set_cookies/cookie.js" type="text/javascript"></script>
+
+
 <style type="text/css">
-/*
+
 body {
-	background-color: #0D0D0D;
+	background-color: #F2F2F2;
 	color: #F2F2F2;
-	        }
-	        */
+}
 
 .center{
 	margin: auto;
-	width: 800px;		
+	width: 800px;			
 }
 th{
 	background: gray;
 	color: white;
 }
-
+.container{
+background: #F2F2F2;
+	color: white;
+	font-family: 50px;
+	font-weight: 500;
+}
+tr {
+   line-height: 20px;   
+}
 </style>
 
 </head>
@@ -60,34 +70,34 @@ th{
 
 
 <div class="center">
-
+ 
 <% if(login != null){ %>
-<table class="table table-bordered">
-<col width="200"><col width="200"><col width="200"><col width="200">
+<table class="table table-striped">
+<col width="150"><col width="200"><col width="150"><col width="200">
 
 <tr>
-	<th>제목</th>
+	<th style="text-align: center;">제 목</th>
 	<td colspan="3"><%=dto.getTitle() %></td>
 </tr>
 <tr>
-	<th>아이디</th>
+	<th style="text-align: center;">아이디</th>
 	<td><%=dto.getId() %></td>
-	<th>조회수</th>
+	<th style="text-align: center;">조회수</th>
 	<td><%=dto.getReadcount() %></td>	
 </tr>
 <tr>	
-	<th>등록일</th>
+	<th style="text-align: center;">등록일</th>
 	<td><%=dto.getWdate() %></td>
-	<th>수정일</th>
+	<th style="text-align: center;">마지막 수정시간</th>
 	<% if(dto.getMdate() != null ){ %>
 	<td><%=dto.getMdate() %></td>	
 	<% } %>
 </tr>	
 
-<tr>	
-	<th>내용</th>
+<tr>
+	<th style="text-align: center ; vertical-align: middle;">내용</th>
 	<td colspan="4" style="height: 300px; font-size: 120%">
-		<textarea rows="12" readonly style="background-color: #ffffff; font-size: 20px" 
+		<textarea rows="12" readonly style="background-color: #ffffff; font-size: 18px" 
 cols="20" class="form-control" ><%=dto.getContent() %></textarea>
 	</td>
 </tr>
@@ -97,6 +107,7 @@ cols="20" class="form-control" ><%=dto.getContent() %></textarea>
 
 <%-- <button type="button" onclick="answerBbs(<%=dto.getSeq() %>)">답글</button> --%>
 <button type="button" class="btn btn-dark" onclick ="detailBbs(<%=dto.getSeq() %>)">목록</button>
+<button type="button" class="btn btn-dark" onclick="answerBbs(<%=dto.getSeq() %>)">답글</button>
 <%
 if(login != null && login.getId().equals(dto.getId()) || login.getAuth()==1){
 	%>
@@ -113,7 +124,9 @@ if(login != null && login.getId().equals(dto.getId()) || login.getAuth()==1){
 <br><br>
 
 <script type="text/javascript">
-
+function answerBbs( seq ) {
+	location.href = "bbsanswer.do?seq=" + seq;
+}
 function detailBbs( seq ) {
 	location.href = "bbslist.do";	
 }
@@ -133,7 +146,7 @@ function deleteBbs( seq ) {
 <input type="hidden" name="seq" value="<%=dto.getSeq() %>"> <!-- 글에 대한 정보 -->
 <input type="hidden" name="id" value="<%=login.getId() %>"> <!-- 세션에 로그인한 사람 정보 -->
 
-<table>
+<table class="table table-hover">
 <col width="1000px"><col width="150px">
 <tr>
 	<td><b>Comment</b></td>
@@ -170,9 +183,9 @@ $(document).ready(function(){
 	
 			$("#tbody").html("");			
 			$.each(list, function(i, item){
-				let str = 	"<tr class='table-info'>"	
+				let str = 	"<tr class='table-light'>"	
 					+		"<td>아이디: " + item.id + "</td>"
-					+		"<td>등록일: " + item.wdate + "</td>"
+					+		"<td>: " + item.wdate + "</td>"
 					+	"</tr>"
 					+	"<tr>"
 					+		"<td colspan='2'>" + item.content + "</td>"								

@@ -34,16 +34,18 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <script type="text/javascript" src="JQuery/jquery.twbsPagination.min.js"></script>
+
 <style type="text/css">
 
+}
 /* 전체 배경색 검정 글자색 하얀색 */
 /* body {
 	background-color: #0D0D0D;
 	color: #F2F2F2;
 	        } */
+	        
 .center{
 	margin: auto;
-	
 	width: 1000px;
 	text-align: center;
 }
@@ -52,7 +54,7 @@ th{
 	color: white;
 } 
 tr {
-   line-height: 12px;   
+   line-height: 20px;   
 }
 </style>
 
@@ -63,8 +65,8 @@ tr {
 
 <div class="center">
 
-<table class="table table-bordered">
-<!-- <col width="70"><col width="600"><col width="100"><col width="150"> -->
+<table class="table table-hover">
+<col width="70"><col width="600"><col width="100"><col width="150">
 <thead>
 <tr>
 	<th>번호</th>	<th>제목</th>	<th>작성자</th><th>조회수</th>
@@ -130,6 +132,7 @@ if(list == null || list.size() == 0){
 
 </table>
 <br>
+
 
 <div class="container">
 	<nav aria-label="Page navigation">

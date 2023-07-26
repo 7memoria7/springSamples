@@ -3,7 +3,9 @@ package ssg.com.a.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,7 +75,8 @@ public class BbsController {
 		model.addAttribute("bbswrite", bbswrite);
 		return "message";
 	}
-	
+	/*
+	// 상세글보기
 	@GetMapping("bbsdetail.do")
 	public String bbsdetail(int seq, Model model) {
 		System.out.println("BbsController bbsdetail() " + new Date());
@@ -83,7 +86,53 @@ public class BbsController {
 		
 		model.addAttribute("bbsdto", dto);
 		return "bbsdetail";
+	}*/
+	
+	//조회수 중복 방지
+
+	@GetMapping("bbsdetail.do")
+	public String bbsdetail(int seq, Model model) {
+		System.out.println("BbsController bbsdetail() " + new Date());
+		
+		//service.readcount(seq);		// 조회수 
+		BbsDto dto= service.bbsdetail(seq);
+		
+		model.addAttribute("bbsdto", dto);
+		return "bbsdetail";
 	}
+	
+	private void readcount(Long id, HttpServletRequest request, HttpServletResponse response) {
+
+    Cookie oldCookie = null;
+    Cookie[] cookies = request.getCookies();
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("postView")) {
+                oldCookie = cookie;
+            }
+        }
+    }
+
+    if (oldCookie != null) {
+        if (!oldCookie.getValue().contains("[" + id.toString() + "]")) {
+            service.readcount(id);
+            oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
+            oldCookie.setPath("/");
+            oldCookie.setMaxAge(60 * 60 * 24);
+            response.addCookie(oldCookie);
+        }
+    } else {
+        service.readcount(id);
+        Cookie newCookie = new Cookie("postView","[" + id + "]");
+        newCookie.setPath("/");
+        newCookie.setMaxAge(60 * 60 * 24);
+        response.addCookie(newCookie);
+    }
+}
+	 
+	
+	
+	
 	/*
 	@GetMapping("/detail/{boardCode}/{boardNo}")
 	public String boardDetail( @PathVariable("boardCode") int boardCode, 
@@ -192,49 +241,15 @@ public class BbsController {
 		 return "bbsupdate"; 
 	 }
 	 
-// 1번
-	 /*
-	@GetMapping("bbsupdateAf.do")
-	public String bbsupdateAf(BbsDto dto) throws Exception {
-		service.bbswrite(dto);
-		service.bbsdetail(dto.getSeq());
-		int result = service.bbsupdate(dto);
-		
-		if(result > 0) 
-				return "redirect:/bbslist.do";
-			else
-				return "error";
-		*/
-	
-	/*		2번
-	 * @RequestMapping(value="bbsupdateAf.do", method= RequestMethod.POST) public
-	 * String bbsupdate(BbsDto dto, Model model, HttpServletRequest request, Object
-	 * seq) throws Exception { System.out.println("BbsController bbsupdateAf() " +
-	 * new Date());
-	 * 
-	 * service.bbsupdate(dto); // BbsDto dto= service.bbsdetail(seq); Boolean isS =
-	 * service.bbswrite(dto); // Boolean isS = service.bbsdetail(seq); String
-	 * bbsupdate = "BBS_UPDATE_OK"; if(isS != false) {
-	 * 
-	 * bbsupdate = "BBS_UPDATE_NO"; }
-	 * 
-	 * // model.addAttribute(seq); model.addAttribute("seq", dto.getSeq());
-	 * model.addAttribute("bbsupdate", bbsupdate);
-	 * 
-	 * // return "redirect:/bbsdetail.do?seq=" + dto.getSeq(); 
-	 * return "bbsdetail"; }
-	 * 
-	 */
-// 3번
 	@GetMapping("bbsupdateAf.do")
 	public String bbsupdateAf(BbsDto dto, Model model) throws Exception {
-		//service.bbswrite(dto);
+		
 		service.bbsdetail(dto.getSeq());
 	boolean isS = service.bbsupdate(dto);
 
 	String bbsupdate = "BBS_UPDATE_OK";
 	if(isS == false) {
-		bbsupdate = "BBS_UPDATE_NO";		// 코드를 줄여보자.
+		bbsupdate = "BBS_UPDATE_NO";		
 	}
 	
 	model.addAttribute("bbsupdate", bbsupdate);
@@ -254,7 +269,32 @@ public class BbsController {
 				return "error";
 						
 	  }
-	
+	  
+	// 답글
+	  @GetMapping("bbsanswer.do")
+		public String bbsanswer(int seq, Model model) {
+			System.out.println("BbsController bbsdetail() " + new Date());
+			
+			BbsDto dto = service.bbsdetail(seq);		
+			model.addAttribute("bbsdto", dto);
+			
+			return "bbsanswer";
+		}
+		
+		@GetMapping("bbsanswerAf.do")
+		public String bbsanswerAf(BbsDto dto, Model model) {
+			System.out.println("BbsController bbsanswerAf() " + new Date());
+			
+			boolean isS = service.BbsAnswer(dto);
+			String bbsanswer = "BBS_ANSWER_OK";
+			if(isS == false) {
+				bbsanswer = "BBS_ANSWER_NO";
+			}
+			model.addAttribute("bbsanswer", bbsanswer);
+			model.addAttribute("seq", dto.getSeq());
+			
+			return "redirect:/bbsdetail.do?seq=" + dto.getSeq();
+		}
 	 
 	// 댓글
 	@PostMapping("commentWriteAf.do")

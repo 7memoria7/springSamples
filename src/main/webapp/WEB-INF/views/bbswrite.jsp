@@ -21,6 +21,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <style type="text/css">
+
 /* body {
 	background-color: #0D0D0D;
 	color: #F2F2F2; */
@@ -33,6 +34,9 @@
 th{
 	background: gray;
 	color: white;
+}
+tr {
+   line-height: 20px;   
 }
 </style>
 </head>

@@ -52,6 +52,17 @@ public class BbsDaoImpl implements BbsDao {
 	public int bbsdelete(int seq) throws Exception {
 		return session.delete(ns + "bbsdelete", seq);
 	}
+	
+	// 답글
+	@Override
+	public void BbsAnswerUpdate(BbsDto dto) {
+		session.update(ns + "BbsAnswerUpdate", dto);
+	}
+
+	@Override
+	public int BbsAnswerInsert(BbsDto dto) {		
+		return session.insert(ns + "BbsAnswerInsert", dto);
+	}
 	// 댓글 
 	@Override
 	public int commentWrite(BbsComment comment) {
@@ -67,7 +78,7 @@ public class BbsDaoImpl implements BbsDao {
 
 	// 조회수
 	@Override
-	public void readcount(int seq) {
+	public void readcount(Long seq) {
 		session.update(ns + "readcount", seq); 
 	}
 
@@ -75,6 +86,8 @@ public class BbsDaoImpl implements BbsDao {
 	public void commnetcount(int seq, int amount) {
 		session.update(ns + "commentcount", seq); 
 	}
+
+	
 	
 	
 }

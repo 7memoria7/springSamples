@@ -19,11 +19,14 @@ public interface BbsDao {
 					
 	int bbsupdate(BbsDto dto) throws Exception;	// 글수정
 	int bbsdelete(int seq) throws Exception;	// 글삭제
+	
+	void BbsAnswerUpdate(BbsDto dto);			// 답글
+	int BbsAnswerInsert(BbsDto dto);
 		
 	int commentWrite(BbsComment comment);		// 댓글
 	List<BbsComment> commentList(int seq);		// 댓글리스트
 	
-	void readcount(int seq);					// 조회수
+	void readcount(Long seq);					// 조회수
 	
 	void commnetcount(							// 댓글 수 추가- 보류
 			@Param("seq") int seq,

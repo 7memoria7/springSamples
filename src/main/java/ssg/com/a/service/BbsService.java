@@ -16,14 +16,15 @@ public interface BbsService {
 	
 	BbsDto bbsdetail(int seq);
 	
-//	void bbsupdate(int seq) throws Exception;
 	boolean bbsupdate(BbsDto dto) throws Exception;
 	int bbsdelete(int seq) throws Exception ;
+	
+	boolean BbsAnswer(BbsDto dto);
 	
 	boolean commentWrite(BbsComment comment);
 	List<BbsComment> commentList(int seq);
 
-	void readcount(int seq);
+	void readcount(Long id);
 	
 	void commnetcount(							// 댓글 수 추가
 			@Param("seq") int seq,

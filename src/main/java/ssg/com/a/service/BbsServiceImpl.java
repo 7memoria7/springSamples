@@ -37,6 +37,12 @@ public class BbsServiceImpl implements BbsService{
 		return dao.bbsdetail(seq);
 	}
 	
+	@Override
+	public boolean BbsAnswer(BbsDto dto) {
+		dao.BbsAnswerUpdate(dto);		
+		return dao.BbsAnswerInsert(dto)>0?true:false;
+	}
+	
 	// 글수정
 	
 	@Override
@@ -44,10 +50,7 @@ public class BbsServiceImpl implements BbsService{
 		return dao.bbsupdate(dto)>0?true:false;
 		
 	}
-	/*
-	 * @Override public void bbsupdate(int seq) throws Exception {
-	 * dao.bbsupdate(seq); }
-	 */
+	
 	
 	 // 글삭제
 	 @Override 
@@ -69,7 +72,7 @@ public class BbsServiceImpl implements BbsService{
 	}
 
 	@Override
-	public void readcount(int seq) {
+	public void readcount(Long seq) {
 		dao.readcount(seq);
 		
 	}
@@ -95,6 +98,5 @@ public class BbsServiceImpl implements BbsService{
 		return mapper.delete(seq);
 	}
 	*/
-	
 
 }
